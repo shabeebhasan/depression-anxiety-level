@@ -3,7 +3,10 @@ import imutils
 import cv2
 from keras.models import load_model
 import numpy as np
+import csv
+from depression_detect import runModel
 
+CSV_FILENAME = 'detected_emotions.csv'
 # parameters for loading data and images
 detection_model_path = 'haarcascade_files/haarcascade_frontalface_default.xml'
 emotion_model_path = 'models/_mini_XCEPTION.102-0.66.hdf5'
@@ -23,10 +26,15 @@ EMOTIONS = ["angry" ,"disgust","scared", "happy", "sad", "surprised",
 # starting video streaming
 cv2.namedWindow('your_face')
 camera = cv2.VideoCapture(0)
-while True:
+
+with open(CSV_FILENAME,newline='',mode='w') as emotions_file:
+  emotion_writer = csv.writer(emotions_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+  emotion_writer.writerow(['angry', 'disgust', 'scared', 'happy', 'sad', 'surprised','neutral'])
+  
+  while True:
     frame = camera.read()[1]
     #reading the frame
-    frame = imutils.resize(frame,width=300)
+    frame = imutils.resize(frame,width=600)
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     faces = face_detection.detectMultiScale(gray,scaleFactor=1.1,minNeighbors=5,minSize=(30,30),flags=cv2.CASCADE_SCALE_IMAGE)
     
@@ -50,11 +58,12 @@ while True:
         label = EMOTIONS[preds.argmax()]
     else: continue
 
- 
+    emotions_prob = []
+
     for (i, (emotion, prob)) in enumerate(zip(EMOTIONS, preds)):
                 # construct the label text
                 text = "{}: {:.2f}%".format(emotion, prob * 100)
-
+                emotions_prob.append(prob)
                 # draw the label + probability bar on the canvas
                # emoji_face = feelings_faces[np.argmax(preds)]
 
@@ -75,6 +84,8 @@ while True:
 #        10:130, c] * (1.0 - emoji_face[:, :, 3] / 255.0)
 
 
+    emotion_writer.writerow(emotions_prob)
+
     cv2.imshow('your_face', frameClone)
     cv2.imshow("Probabilities", canvas)
     if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -82,3 +93,6 @@ while True:
 
 camera.release()
 cv2.destroyAllWindows()
+
+
+runModel(CSV_FILENAME)

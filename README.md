@@ -2,9 +2,11 @@
 
 [Work Report](https://github.com/shabeebhasan/depression-anxiety-level/blob/master/Work_Report.pdf)
 
+## Installation and Setup
 
+```bash
 python -m venv myenv
+source myenv/bin/activate  # On Windows use `myenv\Scripts\activate`
 pip install -r req_dev.txt
-myenv\Scripts\activate
 
 python real_time_video.py

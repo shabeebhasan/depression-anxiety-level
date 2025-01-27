@@ -5,8 +5,8 @@
 ## Installation and Setup
 
 ```bash
-python -m venv myenv
+python3.7 -m venv myenv
 source myenv/bin/activate  # On Windows use `myenv\Scripts\activate`
 pip install -r req_dev.txt
 
-python real_time_video.py
+python3.7 real_time_video.py

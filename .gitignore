@@ -2,3 +2,9 @@
 *.mp4
 *.mov
 /myenv
+/build
+/dist
+/cert
+*.exe
+*.spec
+/__pycache__

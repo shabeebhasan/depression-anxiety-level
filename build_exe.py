@@ -30,8 +30,20 @@ def create_exe(script_path, onefile=True, icon_path=None, noconsole=False, addit
         return
 
     # Base PyInstaller command# Base PyInstaller command
-    command = ["pyinstaller", "--hidden-import=tensorflow", "--hidden-import=tensorflow.keras", script_path]
-
+    command = [
+        "pyinstaller",
+        "--onefile",
+        "--hidden-import=keras.backend.tensorflow_backend",
+        "--hidden-import=pomegranate.utils",
+        "--hidden-import=pomegranate.distributions.NeuralNetworkWrapper",
+        "--hidden-import=networkx",
+        "--hidden-import=pomegranate.callbacks",
+        "--hidden-import=pomegranate.io",
+        "--hidden-import=pomegranate.bayes",
+        "--add-data", "models/_mini_XCEPTION.102-0.66.hdf5;.",
+        "--add-data", "haarcascade_files/haarcascade_frontalface_default.xml;.",
+        script_path
+    ]
 
     # Add options
     if onefile:
